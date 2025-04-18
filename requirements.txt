@@ -5,3 +5,6 @@ scikit-learn
 joblib
 flask_sqlalchemy
 flask_bcrypt
+flask_login
+flask_cors
+requests
