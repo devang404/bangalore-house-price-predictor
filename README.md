@@ -72,9 +72,7 @@ Access the app at `http://127.0.0.1:5000/`
 - Trained with features: BHK, Bath, Total Sqft, Property Age, Location
 - Feature Engineering: One-hot encoding, scaling, etc.
 
-## 🙌 Contributors
 
-- 👤 Your Name (you@example.com)
 
 ## 📄 License
 
