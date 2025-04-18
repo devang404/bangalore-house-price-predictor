@@ -8,3 +8,4 @@ flask_bcrypt
 flask_login
 flask_cors
 requests
+gunicorn
