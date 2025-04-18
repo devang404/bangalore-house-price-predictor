@@ -4,3 +4,4 @@ numpy
 scikit-learn
 joblib
 flask_sqlalchemy
+flask_bcrypt
