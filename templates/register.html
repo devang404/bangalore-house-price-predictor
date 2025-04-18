@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='auth.css') }}">
+</head>
+<body>
+
+<div class="auth-container">
+    <h2>Register</h2>
+    <form id="registerForm" class="auth-form">
+        <label for="regName">Full Name</label>
+        <input type="text" id="regName" required>
+
+        <label for="regEmail">Email</label>
+        <input type="email" id="regEmail" required>
+
+        <label for="regPassword">Password</label>
+        <input type="password" id="regPassword" required>
+
+        <button type="submit" class="auth-btn">Register</button>
+    </form>
+
+    <div class="auth-links">
+        <p>Already have an account? <a href="/login_page">Login here</a></p>
+    </div>
+</div>
+<script>
+    document.getElementById("registerForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+        
+        const name = document.getElementById("regName").value;
+        const email = document.getElementById("regEmail").value;
+        const password = document.getElementById("regPassword").value;
+    
+        fetch("/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, email, password })
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+            if (data.message === "User registered successfully!") {
+                window.location.href = "/login_page"; // Redirect to login
+            }
+        })
+        .catch(error => console.error("Error:", error));
+    });
+</script>
+
+    
+
+</body>
+</html>
+

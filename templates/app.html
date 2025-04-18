@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bangalore Home Price Prediction</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places" async defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/heatmap.js@2.0.5/build/heatmap.min.js"></script>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+    <script src="https://leaflet.github.io/Leaflet.heat/dist/leaflet-heat.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
+   
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+<div class="header">
+    <div class="logo">
+        <i class="fas fa-home"></i> Bangalore Property Predictor
+    </div>
+    <div class="user-panel">
+        <button id="loginBtn" class="auth-btn"><i class="fas fa-sign-in-alt"></i> Login</button>
+        <button id="registerBtn" class="auth-btn"><i class="fas fa-user-plus"></i> Register</button>
+        <div id="userInfo" class="user-info hidden">
+            <span id="username">User</span>
+            <button id="logoutBtn" class="auth-btn small"><i class="fas fa-sign-out-alt"></i></button>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="sidebar">
+        <div class="form-container">
+            <h2>Property Details</h2>
+            <form class="form" id="predictionForm">
+                <div class="form-group">
+                    <label for="uiSqft"><i class="fas fa-ruler-combined"></i> Area (Square Feet)</label>
+                    <input class="area" type="text" id="uiSqft" name="Squareft" value="1000">
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-building"></i> BHK</label>
+                    <div class="switch-field">
+                        <input type="radio" id="radio-bhk-1" name="uiBHK" value="1"/>
+                        <label for="radio-bhk-1">1</label>
+                        <input type="radio" id="radio-bhk-2" name="uiBHK" value="2" checked/>
+                        <label for="radio-bhk-2">2</label>
+                        <input type="radio" id="radio-bhk-3" name="uiBHK" value="3"/>
+                        <label for="radio-bhk-3">3</label>
+                        <input type="radio" id="radio-bhk-4" name="uiBHK" value="4"/>
+                        <label for="radio-bhk-4">4</label>
+                        <input type="radio" id="radio-bhk-5" name="uiBHK" value="5"/>
+                        <label for="radio-bhk-5">5</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-bath"></i> Bath</label>
+                    <div class="switch-field">
+                        <input type="radio" id="radio-bath-1" name="uiBathrooms" value="1"/>
+                        <label for="radio-bath-1">1</label>
+                        <input type="radio" id="radio-bath-2" name="uiBathrooms" value="2" checked/>
+                        <label for="radio-bath-2">2</label>
+                        <input type="radio" id="radio-bath-3" name="uiBathrooms" value="3"/>
+                        <label for="radio-bath-3">3</label>
+                        <input type="radio" id="radio-bath-4" name="uiBathrooms" value="4"/>
+                        <label for="radio-bath-4">4</label>
+                        <input type="radio" id="radio-bath-5" name="uiBathrooms" value="5"/>
+                        <label for="radio-bath-5">5</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="uiLocations"><i class="fas fa-map-marker-alt"></i> Location</label>
+                    <select id="uiLocations" onchange="updateMapLocation()">
+                        <option value="" disabled selected>Choose a Location</option>
+                    </select>
+                    
+                    
+                    <button type="button" id="mapSelectBtn" class="map-btn"><i class="fas fa-map"></i> Select on Map</button>
+                </div>
+                
+                <div class="form-group">
+                    <label for="uiPropertyAge"><i class="fas fa-calendar-alt"></i> Property Age (Years)</label>
+                    <div class="range-container">
+                        <input type="range" id="uiPropertyAge" min="0" max="20" value="0" class="slider">
+                        <span id="propertyAgeValue">0</span>
+                    </div>
+                </div>
+
+                <button class="submit" id="estimateBtn" type="button">
+                    <i class="fas fa-calculator"></i> Estimate Price
+                </button>
+                
+                <div id="uiEstimatedPrice" class="result">
+                    <h2></h2>
+                </div>
+                
+                
+                <!-- <button class="favorite-btn hidden" id="saveFavoriteBtn" type="button">
+                    <i class="far fa-heart"></i> Save to Favorites
+                </button> -->
+                
+            </form>
+        </div>
+    </div>
+    
+    <div class="main-content">
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="map">Map View</button>
+            
+        </div>
+        
+        <div class="tab-content">
+            <div id="map-tab" class="tab-pane active">
+                <div class="map-container">
+                    <div id="mapView"></div>
+                    <div class="map-overlay">
+                        
+                    </div>
+                </div>
+                
+             
+                    <div id="nearbyList" class="places-list"></div>
+                
+            </div>
+            
+            
+            
+            
+            
+            
+        </div>
+    </div>
+</div>
+
+<!-- Authentication Modal -->
+<div id="authModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <div class="auth-tabs">
+            <button class="auth-tab-btn active" data-tab="login">Login</button>
+            <button class="auth-tab-btn" data-tab="register">Register</button>
+        </div>
+        
+        <div id="login-tab" class="auth-tab-pane active">
+            <form id="loginForm" class="auth-form">
+                <div class="form-group">
+                    <label for="loginEmail"><i class="fas fa-envelope"></i> Email</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword"><i class="fas fa-lock"></i> Password</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="auth-submit-btn">Login</button>
+            </form>
+        </div>
+        
+        <div id="register-tab" class="auth-tab-pane">
+            <form id="registerForm" class="auth-form">
+                <div class="form-group">
+                    <label for="regName"><i class="fas fa-user"></i> Name</label>
+                    <input type="text" id="regName" required>
+                </div>
+                <div class="form-group">
+                    <label for="regEmail"><i class="fas fa-envelope"></i> Email</label>
+                    <input type="email" id="regEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="regPassword"><i class="fas fa-lock"></i> Password</label>
+                    <input type="password" id="regPassword" required>
+                </div>
+                <button type="submit" class="auth-submit-btn">Register</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Map Selection Modal -->
+<div id="mapSelectionModal" class="modal">
+    <div class="modal-content map-modal">
+        <span class="close">&times;</span>
+        <h2>Select Location on Map</h2>
+        <div id="selectionMap" class="selection-map"></div>
+        <div class="map-search">
+            <input type="text" id="mapSearchInput" placeholder="Search for a location...">
+        </div>
+        <div class="selected-location">
+            <p>Selected: <span id="selectedLocationText">None</span></p>
+        </div>
+        <button id="confirmLocationBtn" class="submit">Confirm Location</button>
+    </div>
+</div>
+
+<div class="footer">
+    <p>© 2025 Bangalore Property Predictor | Powered by ML</p>
+</div>
+<!-- Include OpenStreetMap (Leaflet.js) -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+<div class="map-container">
+    <div id="mapView" style="height: 500px; width: 100%;"></div>
+
+    <div class="map-overlay">
+        <div class="nearby-amenities">
+            <h3>Nearby Amenities</h3>
+            <div class="amenities-buttons">
+                <button class="amenity-btn" onclick="fetchNearbyPlaces('school')">🏫 Schools</button>
+                <button class="amenity-btn" onclick="fetchNearbyPlaces('hospital')">🏥 Hospitals</button>
+                <button class="amenity-btn" onclick="fetchNearbyPlaces('restaurant')">🍽️ Restaurants</button>
+                <button class="amenity-btn" onclick="fetchNearbyPlaces('mall')">🛍️ Malls</button>
+            </div>
+            <div id="nearbyList" class="places-list" style="max-height: 200px; overflow-y: auto;"></div>
+        </div>
+        
+        
+<script>
+    let map, marker;
+    let userLat, userLon;
+    let amenityMarkers = [];
+
+    function initMap() {
+        map = L.map('mapView').setView([12.9716, 77.5946], 14);
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                attribution: "&copy; OpenStreetMap contributors"
+            }).addTo(map);
+    }
+
+    function updateMapLocation() {
+        let selectedLocation = document.getElementById("uiLocations").value;
+
+        fetch(`https://nominatim.openstreetmap.org/search?q=${selectedLocation}&format=json`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.length > 0) {
+                    let lat = parseFloat(data[0].lat);
+                    let lon = parseFloat(data[0].lon);
+                    userLat = lat;
+                    userLon = lon;
+
+                    if (marker) map.removeLayer(marker);
+                    marker = L.marker([lat, lon]).addTo(map)
+                        .bindPopup(`<b>${selectedLocation}</b>`).openPopup();
+
+                    map.setView([lat, lon], 14);
+                }
+            })
+            .catch(error => console.error("Error fetching location:", error));
+    }
+
+    function fetchNearbyPlaces(type) {
+    if (!userLat || !userLon) {
+        alert("Select a location first!");
+        return;
+    }
+
+    // Remove old markers
+    amenityMarkers.forEach(marker => map.removeLayer(marker));
+    amenityMarkers = [];
+
+    fetch(`/get_nearby_places?lat=${userLat}&lon=${userLon}&type=${type}`)
+        .then(response => response.json())
+        .then(data => {
+            console.log("Nearby Places Data:", data);  // Debugging
+
+            if (!data.places || data.places.length === 0) {
+                alert("No nearby " + type + " found.");
+                return;
+            }
+
+            // Add markers for each place
+            data.places.forEach(place => {
+                let placeMarker = L.marker([place.lat, place.lon]).addTo(map)
+                    .bindPopup(`<b>${place.name}</b>`);
+                amenityMarkers.push(placeMarker);
+            });
+        })
+        .catch(error => console.error("Error fetching places:", error));
+}
+
+    document.addEventListener("DOMContentLoaded", function() {
+        initMap();
+    });
+
+
+</script>
+<script>
+    document.getElementById("loginBtn").addEventListener("click", function() {
+        window.location.href = "/login_page"; // Redirect to login page
+    });
+
+    document.getElementById("registerBtn").addEventListener("click", function() {
+        window.location.href = "/register_page"; // Redirect to register page
+    });
+
+    document.getElementById("logoutBtn").addEventListener("click", function() {
+        fetch("/logout")
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+            window.location.reload(); // Reload page after logout
+        });
+    });
+</script>
+<script>
+    // Check if user is logged in
+    fetch("/check_session")
+    .then(response => response.json())
+    .then(data => {
+        if (data.logged_in) {
+            document.getElementById("userInfo").classList.remove("hidden");
+            document.getElementById("username").textContent = data.user;
+            document.getElementById("loginBtn").style.display = "none";
+            document.getElementById("registerBtn").style.display = "none";
+        }
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const slider = document.getElementById("uiPropertyAge");
+        const output = document.getElementById("propertyAgeValue");
+    
+        if (slider && output) {
+            output.innerText = slider.value;
+            slider.addEventListener("input", function () {
+                output.innerText = this.value;
+            });
+        } else {
+            console.error("Slider or output span not found!");
+        }
+    });
+    </script>
+<!-- Load JavaScript at the end for proper execution -->
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        console.log("📢 HTML Page Loaded!");
+    });
+</script>
+
+    
+</body>
+</html>
+
