@@ -12,6 +12,7 @@ import requests
 import sqlite3
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'fallback_secret') 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False  # Prevents warning
 app.config['SECRET_KEY'] = 'your_secret_key'
