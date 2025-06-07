@@ -1,9 +1,6 @@
 services:
   - type: web
-    name: bangalore-house-price-predictor
+    name: bangalore-house-price
     env: python
-    buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn app:app
-    envVars:
-      - key: FLASK_ENV
-        value: production
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "python app.py"
