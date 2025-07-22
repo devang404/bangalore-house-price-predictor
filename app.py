@@ -12,6 +12,7 @@ import requests
 import sqlite3
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'fallback_secret') 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False  # Prevents warning
 app.config['SECRET_KEY'] = 'your_secret_key'
@@ -362,10 +363,11 @@ def check_session():
 
 
 
-    
+
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
+    
 
-
-    app.run(debug=True)
+    port=int(os.environ.get("PORT",5000))
+    app.run(host="0.0.0.0",port=port,debug=True)
