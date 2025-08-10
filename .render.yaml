@@ -1,7 +1,7 @@
 services:
   - type: web
-    name: bangalore-house-price
+    name: bangalore-house-price-predictor
     env: python
-    buildCommand: "pip install -r requirements.txt"
-    startCommand: "gunicorn main:app"
-    plan:free
+    plan: free
+    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
+    startCommand: gunicorn app:app
