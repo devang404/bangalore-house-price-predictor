@@ -56,7 +56,7 @@ pip install -r requirements.txt
 python app.py
 ```
 
-Access the app at `http://127.0.0.1:5000/`
+
 
 ## 💼 Technologies Used
 
@@ -73,5 +73,15 @@ Access the app at `http://127.0.0.1:5000/`
 - Feature Engineering: One-hot encoding, scaling, etc.
 
 
+
+
+## Screenshots
+
+
+![ Overview](https://github.com/devang404/bangalore-house-price-predictor/blob/main/overview.png)
+
+![nearby-ammenities](https://github.com/devang404/bangalore-house-price-predictor/blob/main/nearby-ammenities.png)
+
+![login-register-page](https://github.com/devang404/bangalore-house-price-predictor/blob/main/login-register%20page.png)
 
 
