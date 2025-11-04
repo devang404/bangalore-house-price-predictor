@@ -57,22 +57,6 @@ window.loadLocations = async function (retryCount = 3) {
 
 
 
-<<<<<<< HEAD
-// Initialize Leaflet Map
-let map;
-function initMap() {
-    map = L.map('mapView').setView([12.9716, 77.5946], 14); // Default to Bangalore
-
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: "&copy; OpenStreetMap contributors"
-    }).addTo(map);
-
-    L.marker([12.9716, 77.5946]).addTo(map)
-        .bindPopup("Bangalore (Default Location)")
-        .openPopup();
-}
-window.onload = initMap;
-=======
 // Initialize global variables
 window.map = null;
 window.currentMarker = null;
@@ -128,7 +112,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }, 1000);
     }
 });
->>>>>>> 6c254c7 (Updated project files and pushed recent changes)
 
 
 // Estimate Price
@@ -188,15 +171,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
-<<<<<<< HEAD
-// Nearby Places API Call
-let userLat, userLon;
-let nearbyMarkers = [];  // Store markers to clear them later
-
-async function fetchNearbyPlaces(type) {
-    if (!userLat || !userLon) {
-        alert("Select a location first!");
-=======
 // Amenity markers storage
 window.amenityMarkers = [];  // Store markers to clear them later
 
@@ -214,44 +188,10 @@ async function fetchNearbyPlaces(type) {
     // Check if location is selected
     if (!window.userLat || !window.userLon) {
         alert("Please select a location first!");
->>>>>>> 6c254c7 (Updated project files and pushed recent changes)
         return;
     }
 
     let nearbyList = document.getElementById("nearbyList");
-<<<<<<< HEAD
-    nearbyList.innerHTML = `<p>Loading nearby ${type}...</p>`;
-
-    try {
-        let response = await fetch(`/get_nearby_places?lat=${userLat}&lon=${userLon}&type=${type}`);
-        let data = await response.json();
-
-        console.log("Nearby Places Data:", data);
-
-        if (!data.places || data.places.length === 0) {
-            nearbyList.innerHTML = `<p>No nearby ${type} found.</p>`;
-            return;
-        }
-
-        // Clear existing markers before adding new ones
-        nearbyMarkers.forEach(marker => marker.remove());
-        nearbyMarkers = [];
-
-        // Loop through places and add them as markers
-        data.places.forEach(place => {
-            let marker = L.marker([place.lat, place.lon])
-                .addTo(map)  // Assuming you already have a `map` object
-                .bindPopup(`<strong>${place.name}</strong><br>(${place.lat}, ${place.lon})`);
-
-            nearbyMarkers.push(marker);  // Store markers for future removal
-        });
-
-        nearbyList.innerHTML = `<p>${data.places.length} nearby ${type} found and displayed on the map.</p>`;
-
-    } catch (error) {
-        console.error("Error fetching places:", error);
-        nearbyList.innerHTML = "<p>Error fetching amenities.</p>";
-=======
     if (!nearbyList) {
         console.error("nearbyList element not found!");
         return;
@@ -295,7 +235,6 @@ async function fetchNearbyPlaces(type) {
                     <li>
                         <strong>${place.name}</strong>
                         ${place.description ? `<br>${place.description}` : ''}
-                        ${place.distance_m ? `<br><small>Distance: ${place.distance_m} m</small>` : ''}
                     </li>
                 `).join('')}
             </ul>
@@ -304,7 +243,6 @@ async function fetchNearbyPlaces(type) {
     } catch (error) {
         console.error("Error fetching places:", error);
         nearbyList.innerHTML = `<p>⚠️ Error fetching nearby ${type}: ${error.message}</p>`;
->>>>>>> 6c254c7 (Updated project files and pushed recent changes)
     }
 }
 
@@ -422,15 +360,12 @@ function updateMapLocation() {
 
     console.log("📌 Fetching coordinates for:", selectedLocation);
 
-<<<<<<< HEAD
-=======
     // Clear any existing amenity markers when location changes
     if (window.amenityMarkers) {
         window.amenityMarkers.forEach(marker => marker.remove());
         window.amenityMarkers = [];
     }
 
->>>>>>> 6c254c7 (Updated project files and pushed recent changes)
     fetch(`/get_location_coords?location=${encodeURIComponent(selectedLocation)}`)
         .then(response => response.json())
         .then(data => {
@@ -443,43 +378,24 @@ function updateMapLocation() {
             let lat = parseFloat(data.lat);
             let lon = parseFloat(data.lon);
 
-<<<<<<< HEAD
-            // Update global user location
-            userLat = lat;
-            userLon = lon;
-=======
             // Update global user location (using window to ensure global scope)
             window.userLat = lat;
             window.userLon = lon;
->>>>>>> 6c254c7 (Updated project files and pushed recent changes)
 
             console.log(`✅ Map updated to: ${lat}, ${lon}`);
 
             // Remove old marker if exists
             if (window.currentMarker) {
-<<<<<<< HEAD
                 map.removeLayer(window.currentMarker);
             }
 
             // Add new marker
             window.currentMarker = L.marker([lat, lon]).addTo(map)
-=======
-                window.map.removeLayer(window.currentMarker);
-            }
-
-            // Add new marker
-            window.currentMarker = L.marker([lat, lon]).addTo(window.map)
->>>>>>> 6c254c7 (Updated project files and pushed recent changes)
                 .bindPopup(`<b>${selectedLocation}</b>`)
                 .openPopup();
 
             // Move the map to new location
-<<<<<<< HEAD
             map.setView([lat, lon], 14);
-        })
-        .catch(error => console.error("❌ Error fetching location:", error));
-=======
-            window.map.setView([lat, lon], 14);
 
             // Clear the nearby list
             let nearbyList = document.getElementById("nearbyList");
@@ -491,7 +407,6 @@ function updateMapLocation() {
             console.error("❌ Error fetching location:", error);
             alert("Error updating location. Please try again.");
         });
->>>>>>> 6c254c7 (Updated project files and pushed recent changes)
 }
 window.addEventListener("DOMContentLoaded", function () {
     const slider = document.getElementById("uiPropertyAge");
