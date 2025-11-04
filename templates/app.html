@@ -2,18 +2,6 @@
 <html>
 <head>
     <title>Bangalore Home Price Prediction</title>
-<<<<<<< HEAD
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places" async defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/heatmap.js@2.0.5/build/heatmap.min.js"></script>
-    <script src="{{ url_for('static', filename='app.js') }}"></script>
-    <script src="https://leaflet.github.io/Leaflet.heat/dist/leaflet-heat.js"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
-   
-<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-=======
         <!-- Leaflet CSS must come before JS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
@@ -27,7 +15,6 @@
     <script src="https://leaflet.github.io/Leaflet.heat/dist/leaflet-heat.js"></script>
     <!-- Load our app.js last -->
     <script src="{{ url_for('static', filename='app.js') }}"></script>
->>>>>>> 6c254c7 (Updated project files and pushed recent changes)
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
@@ -139,11 +126,7 @@
                 </div>
                 
              
-<<<<<<< HEAD
-                    <div id="nearbyList" class="places-list"></div>
-=======
-                   
->>>>>>> 6c254c7 (Updated project files and pushed recent changes)
+                    
                 
             </div>
             
@@ -218,17 +201,8 @@
 <div class="footer">
     <p>© 2025 Bangalore Property Predictor | Powered by ML</p>
 </div>
-<<<<<<< HEAD
-<!-- Include OpenStreetMap (Leaflet.js) -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
 <div class="map-container">
     <div id="mapView" style="height: 500px; width: 100%;"></div>
-
-=======
-<div class="map-container">
-    <div id="mapView" style="height: 500px; width: 100%;"></div>
->>>>>>> 6c254c7 (Updated project files and pushed recent changes)
     <div class="map-overlay">
         <div class="nearby-amenities">
             <h3>Nearby Amenities</h3>
@@ -240,83 +214,8 @@
             </div>
             <div id="nearbyList" class="places-list" style="max-height: 200px; overflow-y: auto;"></div>
         </div>
-<<<<<<< HEAD
-        
-        
-<script>
-    let map, marker;
-    let userLat, userLon;
-    let amenityMarkers = [];
-
-    function initMap() {
-        map = L.map('mapView').setView([12.9716, 77.5946], 14);
-        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-                attribution: "&copy; OpenStreetMap contributors"
-            }).addTo(map);
-    }
-
-    function updateMapLocation() {
-        let selectedLocation = document.getElementById("uiLocations").value;
-
-        fetch(`https://nominatim.openstreetmap.org/search?q=${selectedLocation}&format=json`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.length > 0) {
-                    let lat = parseFloat(data[0].lat);
-                    let lon = parseFloat(data[0].lon);
-                    userLat = lat;
-                    userLon = lon;
-
-                    if (marker) map.removeLayer(marker);
-                    marker = L.marker([lat, lon]).addTo(map)
-                        .bindPopup(`<b>${selectedLocation}</b>`).openPopup();
-
-                    map.setView([lat, lon], 14);
-                }
-            })
-            .catch(error => console.error("Error fetching location:", error));
-    }
-
-    function fetchNearbyPlaces(type) {
-    if (!userLat || !userLon) {
-        alert("Select a location first!");
-        return;
-    }
-
-    // Remove old markers
-    amenityMarkers.forEach(marker => map.removeLayer(marker));
-    amenityMarkers = [];
-
-    fetch(`/get_nearby_places?lat=${userLat}&lon=${userLon}&type=${type}`)
-        .then(response => response.json())
-        .then(data => {
-            console.log("Nearby Places Data:", data);  // Debugging
-
-            if (!data.places || data.places.length === 0) {
-                alert("No nearby " + type + " found.");
-                return;
-            }
-
-            // Add markers for each place
-            data.places.forEach(place => {
-                let placeMarker = L.marker([place.lat, place.lon]).addTo(map)
-                    .bindPopup(`<b>${place.name}</b>`);
-                amenityMarkers.push(placeMarker);
-            });
-        })
-        .catch(error => console.error("Error fetching places:", error));
-}
-
-    document.addEventListener("DOMContentLoaded", function() {
-        initMap();
-    });
-
-
-</script>
-=======
     </div>
 </div>
->>>>>>> 6c254c7 (Updated project files and pushed recent changes)
 <script>
     document.getElementById("loginBtn").addEventListener("click", function() {
         window.location.href = "/login_page"; // Redirect to login page
@@ -364,11 +263,7 @@
     });
     </script>
 <!-- Load JavaScript at the end for proper execution -->
-<<<<<<< HEAD
-<script src="{{ url_for('static', filename='app.js') }}"></script>
-=======
 <!-- app.js is already included in the page head; avoid duplicate includes -->
->>>>>>> 6c254c7 (Updated project files and pushed recent changes)
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -379,4 +274,5 @@
     
 </body>
 </html>
+
 
