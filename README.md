@@ -1,6 +1,4 @@
 
-# Project Title
-
 🏠Bangalore House Price Predictor
 
 This project implements a complete end-to-end data science pipeline: from data preprocessing and training a predictive model to deploying it as a functional, interactive web application.
