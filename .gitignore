@@ -1,0 +1,33 @@
+# ----- Ignore ML model files -----
+*.pickle
+*.pkl
+
+# ----- Ignore CSV datasets -----
+*.csv
+
+# ----- Ignore databases -----
+*.db
+*.sqbpro
+
+# ----- Ignore Python cache -----
+__pycache__/
+
+# ----- Ignore virtual environments -----
+.venv/
+venv/
+env/
+ENV/
+
+# ----- Ignore IDE / editor files -----
+.vscode/
+.idea/
+
+# ----- Ignore backup files -----
+*.bak
+
+# ----- Ignore logs -----
+*.log
+
+# ----- OS-specific garbage -----
+.DS_Store
+Thumbs.db
