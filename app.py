@@ -19,7 +19,7 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev_secret_key_123')
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
-login_manager.login_view = 'login'
+login_manager.login_view = 'login_page'
 login_manager.login_message_category = "info"
 NOMINATIM_API_URL = "https://nominatim.openstreetmap.org/search"
 CORS(app)

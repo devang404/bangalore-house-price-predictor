@@ -786,26 +786,24 @@ html {
     visibility: visible !important;
 }
 
-/* Side-by-Side Wrapper */
+/* Stacked Full-Width Layout - Map on top, Amenities below */
 .map-amenities-wrapper {
     display: flex;
-    flex: 1;
-    flex-direction: row;
-    min-height: 600px;
-    /* Taller map grid */
-    border: 1px solid #e0e0e0;
+    flex-direction: column;
+    gap: 30px;
     margin: 0;
-    border-radius: 12px;
-    overflow: hidden;
-    background: white;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    background: transparent;
 }
 
 .map-container {
-    flex: 7;
-    /* Scale map larger */
+    width: 100%;
+    height: 650px;
     position: relative;
-    border-right: 1px solid #eee;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e0e0e0;
 }
 
 #mapView {
@@ -814,13 +812,84 @@ html {
 }
 
 .nearby-amenities-section {
-    flex: 3;
-    /* Amenities panel takes 30% */
+    width: 100%;
     display: flex;
     flex-direction: column;
-    padding: 20px;
-    background-color: #fcfcfc;
-    overflow-y: auto;
+    padding: 30px;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e0e0e0;
+}
+
+.amenities-grid {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 20px !important;
+    margin-top: 25px;
+}
+
+/* Response Handling for smaller screens */
+@media (max-width: 1200px) {
+    .amenities-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .amenities-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+.place-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background: #fdfdfd;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.place-card:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    border-color: #4CAF50;
+    transform: translateY(-3px);
+    background: white;
+}
+
+.place-info {
+    flex: 1;
+}
+
+.place-name {
+    font-weight: 600;
+    color: #333;
+    font-size: 0.95rem;
+    margin-bottom: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+}
+
+.place-type {
+    font-size: 0.8rem;
+    color: #888;
+    text-transform: capitalize;
+}
+
+.place-distance {
+    background: #e8f5e9;
+    color: #2e7d32;
+    padding: 4px 8px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
 }
 
 /* Header Alignment Fix */
@@ -1037,7 +1106,9 @@ html {
     color: #666;
     background: #f8f9fa;
     border-radius: 10px;
-}@
+}
+
+
 
 /* --- Favorites & Comparison --- */
 .favorites-header {
@@ -1081,7 +1152,7 @@ html {
 .favorite-card {
     background: white;
     border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
     border: 1px solid #eee;
     padding: 15px;
     position: relative;
@@ -1090,7 +1161,7 @@ html {
 
 .favorite-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
     border-color: #4CAF50;
 }
 
@@ -1109,7 +1180,8 @@ html {
 }
 
 .fav-content {
-    margin-left: 25px; /* space for checkbox */
+    margin-left: 25px;
+    /* space for checkbox */
 }
 
 .fav-location {
@@ -1159,10 +1231,10 @@ html {
     border-collapse: collapse;
     margin-top: 20px;
     background: white;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
-.comparison-table th, 
+.comparison-table th,
 .comparison-table td {
     padding: 15px 20px;
     text-align: center;
@@ -1173,7 +1245,8 @@ html {
     background-color: #f8f9fa;
     color: #555;
     font-weight: 600;
-    text-align: left; /* First column mainly */
+    text-align: left;
+    /* First column mainly */
     width: 20%;
 }
 
@@ -1196,7 +1269,8 @@ html {
 }
 
 .best-value {
-    background-color: #e8f5e9 !important; /* Light green */
+    background-color: #e8f5e9 !important;
+    /* Light green */
     color: #2e7d32;
     font-weight: 700;
     position: relative;
@@ -1209,4 +1283,192 @@ html {
     color: #4CAF50;
     margin-top: 4px;
     text-transform: uppercase;
+}
+
+/* --- About Section --- */
+.about-section {
+    padding: 20px;
+    background: #fff;
+    border-radius: 12px;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.about-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.about-header h2 {
+    color: #4CAF50;
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.about-header p {
+    color: #666;
+    font-size: 1.1rem;
+}
+
+.about-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 25px;
+    margin-bottom: 50px;
+}
+
+.info-card {
+    background: #f8f9fa;
+    padding: 25px;
+    border-radius: 10px;
+    border-left: 5px solid #4CAF50;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.info-card.wide {
+    grid-column: 1 / -1;
+}
+
+.info-card h3 {
+    color: #333;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.info-card p {
+    line-height: 1.6;
+    color: #555;
+}
+
+/* Architecture Flow */
+.flow-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 30px 0;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    border: 1px dashed #4CAF50;
+    overflow-x: auto;
+}
+
+.flow-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    min-width: 100px;
+}
+
+.flow-step i {
+    font-size: 2rem;
+    color: #4CAF50;
+}
+
+.flow-step span {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #444;
+}
+
+.flow-arrow {
+    color: #ccc;
+    font-size: 1.5rem;
+}
+
+.flow-desc {
+    font-size: 0.95rem;
+    font-style: italic;
+    text-align: center;
+    margin-top: 15px;
+}
+
+/* Team Section */
+.team-section {
+    margin-top: 40px;
+}
+
+.team-section h3 {
+    text-align: center;
+    font-size: 1.8rem;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.team-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+    border: 1px solid #eee;
+    transition: transform 0.3s;
+}
+
+.team-card:hover {
+    transform: translateY(-10px);
+    border-color: #4CAF50;
+}
+
+.team-avatar {
+    font-size: 4rem;
+    color: #e0e0e0;
+    margin-bottom: 15px;
+}
+
+.team-card h4 {
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.team-role {
+    color: #4CAF50;
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+}
+
+.team-contrib {
+    font-size: 0.85rem;
+    color: #777;
+    margin-bottom: 20px;
+    line-height: 1.4;
+}
+
+.team-links {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.team-links a {
+    color: #ccc;
+    font-size: 1.2rem;
+    transition: color 0.3s;
+}
+
+.team-links a:hover {
+    color: #4CAF50;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

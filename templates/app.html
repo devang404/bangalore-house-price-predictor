@@ -117,9 +117,126 @@
             <div class="tabs">
                 <button class="tab-btn active" data-tab="map">Map View</button>
                 <button class="tab-btn" data-tab="favorites" onclick="loadFavorites()">Saved Properties</button>
+                <button class="tab-btn" data-tab="about">About Project</button>
             </div>
 
             <div class="tab-content">
+                <!-- About Tab -->
+                <div id="about-tab" class="tab-pane">
+                    <div class="about-section">
+                        <div class="about-header">
+                            <h2><i class="fas fa-info-circle"></i> About Bangalore Property Predictor</h2>
+                            <p>An intelligent real estate valuation platform powered by Machine Learning.</p>
+                        </div>
+
+                        <div class="about-grid">
+                            <div class="info-card">
+                                <h3><i class="fas fa-project-diagram"></i> Project Introduction</h3>
+                                <p>The Bangalore House Price Predictor is a data-driven application designed to provide
+                                    accurate property valuation estimates in Bangalore. By leveraging historical real
+                                    estate data and advanced machine learning algorithms, it helps users understand
+                                    market trends and make informed investment decisions.</p>
+                            </div>
+
+                            <div class="info-card">
+                                <h3><i class="fas fa-scope"></i> Project Scope</h3>
+                                <p>The platform focuses on residential properties across Bangalore. It analyzes factors
+                                    like total area (sqft), number of bedrooms (BHK), bathrooms, and property age. The
+                                    scope includes real-time amenity discovery (schools, hospitals, etc.) and
+                                    location-based price adjustments driven by our predictive model.</p>
+                            </div>
+
+                            <div class="info-card wide">
+                                <h3><i class="fas fa-microchip"></i> System Architecture & Flow</h3>
+                                <div class="flow-container">
+                                    <div class="flow-step">
+                                        <i class="fas fa-keyboard"></i>
+                                        <span>User Input</span>
+                                    </div>
+                                    <div class="flow-arrow"><i class="fas fa-long-arrow-alt-right"></i></div>
+                                    <div class="flow-step">
+                                        <i class="fas fa-cogs"></i>
+                                        <span>Flask Backend</span>
+                                    </div>
+                                    <div class="flow-arrow"><i class="fas fa-long-arrow-alt-right"></i></div>
+                                    <div class="flow-step">
+                                        <i class="fas fa-brain"></i>
+                                        <span>RF Model</span>
+                                    </div>
+                                    <div class="flow-arrow"><i class="fas fa-long-arrow-alt-right"></i></div>
+                                    <div class="flow-step">
+                                        <i class="fas fa-chart-line"></i>
+                                        <span>Price Prediction</span>
+                                    </div>
+                                    <div class="flow-arrow"><i class="fas fa-long-arrow-alt-right"></i></div>
+                                    <div class="flow-step">
+                                        <i class="fas fa-map-marked-alt"></i>
+                                        <span>Interactive UI</span>
+                                    </div>
+                                </div>
+                                <p class="flow-desc">Our architecture uses a <strong>Random Forest Regressor</strong>
+                                    trained on a cleaned dataset of 13,000+ listings. The frontend communicates with a
+                                    <strong>Flask API</strong> to provide sub-second predictions and dynamic map updates
+                                    via <strong>Leaflet.js</strong>.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="team-section">
+                            <h3><i class="fas fa-users"></i> Our Team & Contributions</h3>
+                            <div class="team-grid">
+                                <div class="team-card">
+                                    <div class="team-avatar"><i class="fas fa-user-circle"></i></div>
+                                    <h4>Devang Nadkarni</h4>
+                                    <p class="team-role">System Architect Developer</p>
+                                    <p class="team-contrib">ML model optimization, deployment configuration, and UI/UX
+                                        Architecture.</p>
+                                    <div class="team-links">
+                                        <a href="https://www.linkedin.com/in/devang-nadkarni-79066a319"
+                                            target="_blank"><i class="fab fa-linkedin"></i></a>
+                                        <a href="mailto:nadkarnidevang@gmail.com"><i class="fas fa-envelope"></i></a>
+                                    </div>
+                                </div>
+                                <div class="team-card">
+                                    <div class="team-avatar"><i class="fas fa-user-circle"></i></div>
+                                    <h4>Yuvraj Mangutkar</h4>
+                                    <p class="team-role">Data Engineer</p>
+                                    <p class="team-contrib">Data Preprocessing, Feature Engineering, and Model Training
+                                        logic.</p>
+                                    <div class="team-links">
+                                        <a href="https://www.linkedin.com/in/yuvraj-mangutkar?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
+                                            target="_blank"><i class="fab fa-linkedin"></i></a>
+                                        <a href="mailto:mangutkaryuvraj@gmail.com"><i class="fas fa-envelope"></i></a>
+                                    </div>
+                                </div>
+                                <div class="team-card">
+                                    <div class="team-avatar"><i class="fas fa-user-circle"></i></div>
+                                    <h4>Sujit Kale</h4>
+                                    <p class="team-role">Front End Developer</p>
+                                    <p class="team-contrib">UI/UX Design, Map Integration, and Responsive Layout
+                                        development.</p>
+                                    <div class="team-links">
+                                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                                        <a href="#"><i class="fas fa-envelope"></i></a>
+                                    </div>
+                                </div>
+                                <div class="team-card">
+                                    <div class="team-avatar"><i class="fas fa-user-circle"></i></div>
+                                    <h4>Manav Konde</h4>
+                                    <p class="team-role">Quality Analyst</p>
+                                    <p class="team-contrib">Documentation, system testing, research analysis, and
+                                        quality assurance.</p>
+                                    <div class="team-links">
+                                        <a href="https://www.linkedin.com/in/manav-konde-9b23242b1?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
+                                            target="_blank"><i class="fab fa-linkedin"></i></a>
+                                        <a href="mailto:manavkonde01@gmail.com"><i class="fas fa-envelope"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Favorites Tab -->
                 <div id="favorites-tab" class="tab-pane">
                     <div class="favorites-header">
