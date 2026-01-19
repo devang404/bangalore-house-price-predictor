@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+ENV/
+
+# Databases & Large Files
+instance/
+*.db-journal
+# house_prices.db is needed for coords, so we include it
+# users.db should be ignored to avoid overwriting remote with local users
+instance/users.db
+
+# IDEs
+.vscode/
+.idea/
+
+# App Specific
+!banglore_home_prices_model.pickle
+!house_prices.db
+!BHP.csv
+!columns.json
+!Procfile
+!requirements.txt
+!init_db.py
+!train_optimized_model.py
+!app.py
+!static/
+!templates/
