@@ -698,9 +698,17 @@ def check_session():
 
 
     
+@app.route("/login_page")
+def login_page():
+    return render_template("login.html")
+
+@app.route("/register_page")
+def register_page():
+    return render_template("register.html")
+
+# Ensure database tables exist
+with app.app_context():
+    db.create_all()
+
 if __name__ == "__main__":
-    with app.app_context():
-        db.create_all()
-
-
     app.run(debug=True)
