@@ -1,7 +1,49 @@
 document.addEventListener("DOMContentLoaded", function () {
     console.log("✅ DOM fully loaded, running loadLocations...");
     loadLocations();
+    setupTabs();
+    setupModals();
 });
+
+function setupTabs() {
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabPanes = document.querySelectorAll('.tab-pane');
+
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const tabId = btn.getAttribute('data-tab');
+
+            // Remove active class from all buttons and panes
+            tabBtns.forEach(b => b.classList.remove('active'));
+            tabPanes.forEach(p => p.classList.remove('active'));
+
+            // Add active class to clicked button and target pane
+            btn.classList.add('active');
+            const targetPane = document.getElementById(`${tabId}-tab`);
+            if (targetPane) targetPane.classList.add('active');
+
+            if (tabId === 'map' && window.map) {
+                setTimeout(() => window.map.invalidateSize(), 100);
+            }
+        });
+    });
+}
+
+function setupModals() {
+    // Close modals when clicking X
+    document.querySelectorAll('.close').forEach(closeBtn => {
+        closeBtn.onclick = function () {
+            closeBtn.closest('.modal').style.display = "none";
+        };
+    });
+
+    // Close modals when clicking outside
+    window.onclick = function (event) {
+        if (event.target.classList.contains('modal')) {
+            event.target.style.display = "none";
+        }
+    };
+}
 
 // Function to load locations into the dropdown
 window.loadLocations = async function (retryCount = 3) {
@@ -150,8 +192,13 @@ function estimatePrice() {
                 if (data.estimated_price !== undefined) {
                     let finalPrice = Math.abs(data.estimated_price);
                     priceOutput.innerHTML = `<h2>Estimated Price: ₹${finalPrice.toLocaleString()} Lakh</h2>`;
+
+                    // Show save favorite button
+                    const saveBtn = document.getElementById("saveFavoriteBtn");
+                    if (saveBtn) saveBtn.classList.remove("hidden");
                 } else {
                     priceOutput.innerHTML = "<h2 style='color:red;'>Error: No price received.</h2>";
+                    document.getElementById("saveFavoriteBtn")?.classList.add("hidden");
                 }
             }
         })
@@ -250,21 +297,25 @@ async function fetchNearbyPlaces(type) {
 
 
 // Save Favorite Properties
+// Save Favorite Properties
 function saveFavorite() {
     let location = document.getElementById("uiLocations").value;
     let sqft = document.getElementById("uiSqft").value;
     let bhk = document.querySelector("input[name='uiBHK']:checked")?.value;
     let bath = document.querySelector("input[name='uiBathrooms']:checked")?.value;
+    let propertyAge = document.getElementById("uiPropertyAge")?.value;
     let priceElement = document.querySelector("#uiEstimatedPrice h2");
 
-    if (!priceElement) {
+    if (!priceElement || priceElement.innerText === "") {
         alert("Estimate the price first before saving.");
         return;
     }
 
-    let price = priceElement.innerText.replace("Estimated Price: ₹", "").replace(" Lakh", "");
+    // Extract numeric price
+    let priceText = priceElement.innerText;
+    let price = priceText.replace(/[^\d.]/g, ''); // Remove non-numeric chars except dot
 
-    if (!location || location === "Choose a Location" || !sqft || !bhk || !bath || !price) {
+    if (!location || location === "Choose a Location" || !sqft || !bhk || !bath || !propertyAge) {
         alert("Please fill in all the required fields before saving.");
         return;
     }
@@ -277,79 +328,183 @@ function saveFavorite() {
             sqft: parseInt(sqft),
             bhk: parseInt(bhk),
             bath: parseInt(bath),
-            propertyAge: Math.floor(Math.random() * 20) + 1, // Simulating property age
+            propertyAge: parseInt(propertyAge),
             price: parseFloat(price)
         })
     })
-        .then(response => response.json())
+        .then(async response => {
+            if (!response.ok) {
+                // Check if it's a 401/403 (Unauthorized)
+                if (response.status === 401 || response.status === 403) {
+                    alert("Please log in to save properties.");
+                    document.getElementById('authModal').style.display = 'block';
+                    throw new Error("Unauthorized");
+                }
+                const err = await response.json();
+                throw new Error(err.error || "Failed to save");
+            }
+            return response.json();
+        })
         .then(data => {
             alert(data.message);
-            loadFavorites(); // Refresh the saved properties list
+            loadFavorites();
         })
-        .catch(error => console.error("Error saving favorite:", error));
+        .catch(error => {
+            console.error("Error saving favorite:", error);
+        });
 }
 
 
+// Load Favorites with Card UI
 function loadFavorites() {
     fetch("/get_favorites")
         .then(response => response.json())
         .then(data => {
             let favoritesList = document.getElementById("favoritesList");
-            favoritesList.innerHTML = ""; // Clear existing list
+            favoritesList.innerHTML = "";
 
             if (!data.favorites || data.favorites.length === 0) {
-                favoritesList.innerHTML = "<p>No saved properties found.</p>";
+                favoritesList.innerHTML = "<p class='placeholder-text'>No saved properties found. Start by estimating a price!</p>";
                 return;
             }
 
+            // Store favorites globally for easy access during comparison
+            window.allFavorites = data.favorites;
+
             data.favorites.forEach(fav => {
                 let favItem = document.createElement("div");
-                favItem.classList.add("favorite-item");
+                favItem.classList.add("favorite-card");
+
+                // Store full data object as a string for easy retrieval
+                favItem.dataset.details = JSON.stringify(fav);
 
                 favItem.innerHTML = `
-                    <strong>${fav.location}</strong> - ${fav.sqft} sqft, ${fav.bhk} BHK, ${fav.bath} Bath, ${fav.property_age} years old - ₹${fav.price}L
-                    <button class="remove-fav" onclick="deleteFavorite(${fav.id})">❌ Remove</button>
+                    <div class="fav-check-wrapper">
+                        <input type="checkbox" class="compare-checkbox" value="${fav.id}">
+                    </div>
+                    <button class="remove-fav-btn" onclick="deleteFavorite(${fav.id})" title="Remove">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                    <div class="fav-content">
+                        <div class="fav-location">${fav.location}</div>
+                        <div class="fav-details">
+                            <span><i class="fas fa-bed"></i> ${fav.bhk} BHK</span> &bull; 
+                            <span><i class="fas fa-bath"></i> ${fav.bath} Bath</span> &bull; 
+                            <span><i class="fas fa-ruler-combined"></i> ${fav.sqft} sqft</span>
+                        </div>
+                        <div class="fav-details">
+                            <span><i class="fas fa-calendar-alt"></i> ${fav.property_age} Years Old</span>
+                        </div>
+                        <div class="fav-price">₹${fav.price} Lakh</div>
+                    </div>
                 `;
 
                 favoritesList.appendChild(favItem);
             });
-
-            document.getElementById("savedPropertiesSection").style.display = "block"; // Show the saved properties section
         })
         .catch(error => console.error("Error loading favorites:", error));
 }
 
+// Compare Properties Logic
+function compareProperties() {
+    // Get all checked boxes
+    const checkboxes = document.querySelectorAll('.compare-checkbox:checked');
 
-
-// Delete Favorite
-function deleteFavorite(favId) {
-    fetch(`/delete_favorite/${favId}`, { method: "DELETE" })
-        .then(response => response.json())
-        .then(data => {
-            alert(data.message);
-            loadFavorites(); // Refresh the list after deletion
-        })
-        .catch(error => console.error("Error deleting favorite:", error));
-}
-
-
-// Compare Properties
-document.getElementById("compareBtn").addEventListener("click", function () {
-    let selectedProperties = document.querySelectorAll(".favorite-item input[type='checkbox']:checked");
-
-    if (selectedProperties.length < 2) {
-        alert("Select at least two properties to compare.");
+    if (checkboxes.length < 2) {
+        alert("Please select at least 2 properties to compare.");
         return;
     }
 
-    let comparisonTable = "<table border='1'><tr><th>Location</th><th>Sqft</th><th>BHK</th><th>Bath</th><th>Price</th></tr>";
-    selectedProperties.forEach(checkbox => {
-        let details = checkbox.parentElement.dataset.details.split("|");
-        comparisonTable += `<tr><td>${details.join("</td><td>")}</td></tr>`;
+    if (checkboxes.length > 4) {
+        alert("You can compare up to 4 properties at a time.");
+        return;
+    }
+
+    // Collect data for selected properties
+    let selectedProps = [];
+    checkboxes.forEach(cb => {
+        // Find the full favorite object from the global array
+        const favId = parseInt(cb.value);
+        const prop = window.allFavorites.find(f => f.id === favId);
+        if (prop) selectedProps.push(prop);
     });
-    comparisonTable += "</table>";
-    document.getElementById("comparisonResult").innerHTML = comparisonTable;
-});
+
+    // Calculate Price per Sqft for each and find "Best Value"
+    let minPricePerSqft = Infinity;
+    let bestValueIndex = -1;
+
+    selectedProps.forEach((p, index) => {
+        // Price is in Lakhs, Sqft is in units. 
+        // Metric: Price (Lakhs) / Sqft * 100000 = Price per Sqft in Rupees
+        // But for comparison, just Price/Sqft is enough.
+        const pPerSqft = p.price / p.sqft;
+        p.pricePerSqft = (pPerSqft * 100000).toFixed(0); // ₹/sqft
+
+        if (pPerSqft < minPricePerSqft) {
+            minPricePerSqft = pPerSqft;
+            bestValueIndex = index;
+        }
+    });
+
+    // Generate Table HTML
+    let tableHtml = `
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Feature</th>
+                    ${selectedProps.map(p => `<th>${p.location}</th>`).join('')}
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Price</strong></td>
+                    ${selectedProps.map(p => `<td><strong>₹${p.price} L</strong></td>`).join('')}
+                </tr>
+                <tr>
+                    <td><strong>Area (Sqft)</strong></td>
+                    ${selectedProps.map(p => `<td>${p.sqft}</td>`).join('')}
+                </tr>
+                <tr>
+                    <td><strong>Price / Sqft</strong></td>
+                    ${selectedProps.map((p, i) => {
+        const isBest = i === bestValueIndex;
+        return `<td class="${isBest ? 'best-value' : ''}">₹${p.pricePerSqft} ${isBest ? '' : ''}</td>`;
+    }).join('')}
+                </tr>
+                <tr>
+                    <td><strong>BHK</strong></td>
+                    ${selectedProps.map(p => `<td>${p.bhk}</td>`).join('')}
+                </tr>
+                <tr>
+                    <td><strong>Bathrooms</strong></td>
+                    ${selectedProps.map(p => `<td>${p.bath}</td>`).join('')}
+                </tr>
+                <tr>
+                    <td><strong>Age</strong></td>
+                    ${selectedProps.map(p => `<td>${p.property_age} Years</td>`).join('')}
+                </tr>
+            </tbody>
+        </table>
+    `;
+
+    // Inject into Modal
+    document.getElementById('comparisonContainer').innerHTML = tableHtml;
+
+    // Show Modal
+    const modal = document.getElementById('compareModal');
+    modal.style.display = "block";
+
+    // Close Modal Logic
+    modal.querySelector('.close').onclick = function () {
+        modal.style.display = "none";
+    }
+
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+}
 
 function updateMapLocation() {
     let locationDropdown = document.getElementById("uiLocations");

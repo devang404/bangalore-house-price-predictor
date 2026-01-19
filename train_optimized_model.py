@@ -100,15 +100,9 @@ y = df11.price
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=10)
 
-# NOTE: Not using StandardScaler on the entire dataset before split to avoid data leakage, 
-# but for simplicity in this specific legacy app structure where the frontend expects raw inputs,
-# we often train on raw or handle scaling inside the pipeline. 
-# However, to be robust, let's stick to raw inputs for trees (RandomForest doesn't strictly need scaling)
-# OR if we want to improve, we can use a pipeline. 
-# Given the user wants "better correctness", a simple RandomForest is usually robust enough without scaling.
-# But I will keep it simple as the previous model was raw too, just with bad "synthetic" features.
 
-# Optimized Params for Size < 512MB
+
+
 # Limiting depth and estimators significantly reduces model size.
 model = RandomForestRegressor(n_estimators=100, max_depth=12, random_state=10, n_jobs=-1)
 model.fit(X_train, y_train)

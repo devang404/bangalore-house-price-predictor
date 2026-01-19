@@ -105,9 +105,9 @@
                     </div>
 
 
-                    <!-- <button class="favorite-btn hidden" id="saveFavoriteBtn" type="button">
-                    <i class="far fa-heart"></i> Save to Favorites
-                </button> -->
+                    <button class="favorite-btn hidden" id="saveFavoriteBtn" type="button" onclick="saveFavorite()">
+                        <i class="far fa-heart"></i> Save to Favorites
+                    </button>
 
                 </form>
             </div>
@@ -116,10 +116,31 @@
         <div class="main-content">
             <div class="tabs">
                 <button class="tab-btn active" data-tab="map">Map View</button>
-
+                <button class="tab-btn" data-tab="favorites" onclick="loadFavorites()">Saved Properties</button>
             </div>
 
             <div class="tab-content">
+                <!-- Favorites Tab -->
+                <div id="favorites-tab" class="tab-pane">
+                    <div class="favorites-header">
+                        <h3><i class="fas fa-heart"></i> Your Saved Properties</h3>
+                        <button id="compareBtn" class="action-btn" onclick="compareProperties()"><i
+                                class="fas fa-balance-scale"></i> Compare Selected</button>
+                    </div>
+                    <div id="favoritesList" class="favorites-grid">
+                        <p class="placeholder-text">Log in to save and view your favorite properties.</p>
+                    </div>
+                </div>
+
+                <!-- Comparison Modal -->
+                <div id="compareModal" class="modal">
+                    <div class="modal-content large-modal">
+                        <span class="close">&times;</span>
+                        <h2>Property Comparison</h2>
+                        <div id="comparisonContainer"></div>
+                    </div>
+                </div>
+
                 <div id="map-tab" class="tab-pane active">
                     <div class="map-amenities-wrapper">
                         <div class="map-container">

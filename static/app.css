@@ -1037,4 +1037,176 @@ html {
     color: #666;
     background: #f8f9fa;
     border-radius: 10px;
+}@
+
+/* --- Favorites & Comparison --- */
+.favorites-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 10px 0;
+    border-bottom: 2px solid #eee;
+}
+
+.favorites-header h3 {
+    color: #4CAF50;
+    font-size: 1.4rem;
+}
+
+.action-btn {
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.action-btn:hover {
+    background-color: #1976D2;
+}
+
+.favorites-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.favorite-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    border: 1px solid #eee;
+    padding: 15px;
+    position: relative;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.favorite-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+    border-color: #4CAF50;
+}
+
+.fav-check-wrapper {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    z-index: 10;
+}
+
+.compare-checkbox {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #2196F3;
+}
+
+.fav-content {
+    margin-left: 25px; /* space for checkbox */
+}
+
+.fav-location {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.fav-details {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+}
+
+.fav-price {
+    font-size: 1.2rem;
+    color: #4CAF50;
+    font-weight: 700;
+}
+
+.remove-fav-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    color: #ff5252;
+    cursor: pointer;
+    font-size: 1.1rem;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+}
+
+.remove-fav-btn:hover {
+    opacity: 1;
+}
+
+/* Comparison Modal */
+.large-modal {
+    max-width: 900px;
+    width: 90%;
+}
+
+.comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.comparison-table th, 
+.comparison-table td {
+    padding: 15px 20px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+}
+
+.comparison-table th {
+    background-color: #f8f9fa;
+    color: #555;
+    font-weight: 600;
+    text-align: left; /* First column mainly */
+    width: 20%;
+}
+
+/* Make property columns centered */
+.comparison-table th:not(:first-child),
+.comparison-table td:not(:first-child) {
+    text-align: center;
+    border-left: 1px solid #eee;
+}
+
+.comparison-table tr:first-child th {
+    background-color: #4CAF50;
+    color: white;
+    font-size: 1.1rem;
+    border: none;
+}
+
+.comparison-table tr:hover td {
+    background-color: #fafafa;
+}
+
+.best-value {
+    background-color: #e8f5e9 !important; /* Light green */
+    color: #2e7d32;
+    font-weight: 700;
+    position: relative;
+}
+
+.best-value::after {
+    content: ' Best Value';
+    display: block;
+    font-size: 0.7rem;
+    color: #4CAF50;
+    margin-top: 4px;
+    text-transform: uppercase;
 }
